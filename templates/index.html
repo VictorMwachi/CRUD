@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block body %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="jumbotron p-3 bg-light rounded">
+				<b>Manage Employess</b> <button type="button" class="btn btn-primary float-right" data-bs-toggle="modal" data-bs-target="#mymodal" style="padding-block: 10px; margin-bottom: auto;">Add Employees</button>
+				
+
+{% with messages = get_flashed_messages()%}
+{% for message in messages %}
+<div class="alert alert-success alert-dismissible" role="alert">
+	{{message}}
+	<button type ="button" class="btn btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+		<span aria-hidden="true">x</span>
+	</button>
+</div>
+
+{%endfor%}
+{%endwith%}
+
+
+				<!-------employee table list---->
+
+				<table class="table table-hover table-dark">
+
+					<tr>
+						<th>ID</th>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>D.O.B</th>
+						<th>Email</th>
+						<th>Action</th>
+					</tr>
+					{% for employee in employees %}
+					<tr>
+						<td>{{employee.id}}</td>
+						<td>{{employee.first_name}}</td>
+						<td>{{employee.last_name}}</td>
+						<td>{{employee.date_of_birth}}</td>
+						<td>{{employee.email}}</td>
+						<td><a href="/update/{{employee.id}}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editmodal{{employee.id}}">Edit</a> <a href="delete/{{employee.id}}" type="submit" class="btn btn-danger" onclick="return confirm('Are u sure u want to delete?')">Delete</a></td>
+					</tr>
+					<!----ADD employee modal--->
+					<div class="modal mymodal fade bg-secondary py-5" tabindex="-1" role="dialog" id="mymodal" data-bs-backdrop="static" >
+					  <div class="modal-dialog" role="document">
+					    <div class="modal-content rounded-4 shadow">
+					      <div class="modal-header p-5 pb-4 border-bottom-0">
+					        <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
+					        <h1 class="fw-bold mb-0 fs-2">ADD EMPLOYEE</h1>
+					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
+					      </div>
+
+					      <div class="modal-body p-5 pt-0">
+					        <form class="" action="{{url_for('insert')}}" method="POST">
+					        	<div class="form-floating mb-3">
+					            <input type="text" class="form-control rounded-3" name="fname" id="floatingFirst" placeholder="First Name" required>
+					            <label for="floatingFirst">First Name</label>
+					          </div>
+					          <div class="form-floating mb-3">
+					            <input type="text" class="form-control rounded-3" name="lname" id="floatingLast" placeholder="Last Name" required>
+					            <label for="floatingFirst">Last Name</label>
+					          </div>
+					          <div class="form-floating mb-3">
+					            <input type="email" class="form-control rounded-3" name="email" id="floatingInput" placeholder="name@example.com" required>
+					            <label for="floatingInput">Email address</label>
+					          </div>
+					          <div class="form-floating mb-3">
+					            <input type="date" class="form-control rounded-3" name="dob" id="floatingDate" placeholder="date" required>
+					            <label for="floatingDate">Date oF Birth</label>
+					          </div>
+					          
+					         
+					          <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Add Employee</button>
+					          <hr class="my-4">
+					          
+					        </form>
+					      </div>
+					    </div>
+					  </div>
+					</div>
+
+					<!----END  ADD employee modal--->
+
+
+					<!---Edit Employee modal------->
+					<div class="modal fade" id="editmodal{{employee.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+					  <div class="modal-dialog">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <h1 class="modal-title fs-5" id="staticBackdropLabel">Update Employee Info</h1>
+					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
+					      </div>
+					      <div class="modal-body">
+					        <form class="" action="{{url_for('update')}}" method="POST">
+					        	<input type="hidden" name="id" value="{{employee.id}}">
+					        	<div class="form-floating mb-3">
+					            <input type="text" class="form-control rounded-3" name="fname" id="floatingFirst" value="{{employee.first_name}}" required>
+					            <label for="floatingFirst">First Name</label>
+					          </div>
+					          <div class="form-floating mb-3">
+					            <input type="text" class="form-control rounded-3" name="lname" id="floatingLast" value="{{employee.last_name}}" required>
+					            <label>Last Name</label>
+					          </div>
+					          <div class="form-floating mb-3">
+					            <input type="email" class="form-control rounded-3" name="email" id="floatingInput" value="{{employee.email}}" required>
+					            <label>Email address</label>
+					          </div>
+					          <div class="form-floating mb-3">
+					            <input type="date" class="form-control rounded-3" name="dob" id="floatingDate" value="{{employee.date_of_birth}}" required>
+					            <label>Date oF Birth</label>
+					          </div>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					        <button type="submit" class="btn btn-primary">Update</button>
+					      </div>
+					    </form>
+					    </div>
+					  </div>
+					</div>
+					<!----END  EDIT employee modal--->
+					{%endfor%}
+					
+				</table>
+			</div>
+		</div>
+	</div>	
+</div>
+
+
+
+{% endblock %}
